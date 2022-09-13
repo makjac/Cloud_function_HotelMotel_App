@@ -129,8 +129,9 @@ app.get("/api/booking/get_number_of_collisions", (req, res) => {
       var response = 0;
 
       snapshot.docs.forEach(bookingDoc => {
-        //return {st: startTimeHeader, stf: bookingDoc.data()['start_time']['_seconds']};
-        if(bookingDoc.data()['start_time']['_seconds'] < endTime && bookingDoc.data()['end_time']['_seconds'] > startTime){
+        const start_time = bookingDoc.data()['start_time']['_seconds'];
+        const end_time = bookingDoc.data()['end_time']['_seconds']
+        if(isNotNumberBetween(startTime, start_time, end_time) && isNotNumberBetween(endTime, start_time, end_time)){
           response++;
         }
       });
@@ -142,6 +143,15 @@ app.get("/api/booking/get_number_of_collisions", (req, res) => {
     }
   })();
 });
+
+function isNumberBetween(checkNum, lowNum, highNum){
+  return (checkNum > lowNum && checkNum < highNum);
+}
+
+function isNotNumberBetween(checkNum, lowNum, highNum){
+  return !(checkNum > lowNum && checkNum < highNum);
+}
+
 
 //post -> post()
 //app.post("/api/hotel/booking/evaluate/:id")
