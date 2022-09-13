@@ -120,23 +120,21 @@ app.get("/api/booking/get_number_of_collisions", (req, res) => {
       var startTime = parseInt(req.headers['start_time'],10);
       var endTime = parseInt(req.headers['end_time'],10);
 
-
       const bookingRef = firestore.collection('booking')
                                   .where('room_id', '==', roomId);
-
       const snapshot = await bookingRef.get();
 
-      var response = 0;
+      var collisions = 0;
 
       snapshot.docs.forEach(bookingDoc => {
         const start_time = bookingDoc.data()['start_time']['_seconds'];
         const end_time = bookingDoc.data()['end_time']['_seconds']
-        if(isNotNumberBetween(startTime, start_time, end_time) && isNotNumberBetween(endTime, start_time, end_time)){
-          response++;
+        if(isNotNumberBetween(start_time, startTime, endTime) && isNotNumberBetween(end_time, startTime, endTime)){
+          collisions++;
         }
       });
 
-      return res.status(200).send({status:"200", msg: "sucess", length: response});
+      return res.status(200).send({status:"200", msg: "sucess", length: collisions});
     } catch(error) {
       console.log(error);
       return res.status(500).send({status:"500", msg: error});
