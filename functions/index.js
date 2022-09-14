@@ -129,7 +129,7 @@ app.get("/api/booking/get_number_of_collisions", (req, res) => {
       snapshot.docs.forEach(bookingDoc => {
         const start_time = bookingDoc.data()['start_time']['_seconds'];
         const end_time = bookingDoc.data()['end_time']['_seconds']
-        if(isNotNumberBetween(start_time, startTime, endTime) && isNotNumberBetween(end_time, startTime, endTime)){
+        if(isNumberBetween(start_time, startTime, endTime) || isNumberBetween(end_time, startTime, endTime)){
           collisions++;
         }
       });
