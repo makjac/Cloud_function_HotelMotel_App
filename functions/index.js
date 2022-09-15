@@ -154,6 +154,82 @@ function isNotNumberBetween(checkNum, lowNum, highNum){
 //post -> post()
 //app.post("/api/hotel/booking/evaluate/:id")
 
+app.post("/api/hotel/create_new_hotel", (req, res)=>{
+  (async () =>{
+    try{
+      const hotel = {
+        bulding_number:   req.body.bulding_number,
+        category:         req.body.category,
+        city:             req.body.city,
+        country:          req.body.country,
+        email:            req.body.email,
+        free_canceling:   req.body.free_canceling,
+        isRecomended:     false,
+        local_number:     req.body.local_number,
+        name:             req.body.name,
+        phone_number:     req.body.phone_number,
+        phone_prefix:     req.body.phone_prefix,
+        rating:           0,
+        street:           req.body.street,
+        zipcode:          req.body.zipcode,
+      };
+
+      const private = {
+        roles:{
+          owner: req.body.user_uid,
+        }
+      };
+
+      await (await firestore.collection('hotel').add(hotel)).collection('private_data').doc('private').set(private);
+      
+      return res.status(200).send({status:"200", msg: "sucess"});
+    }catch(error){
+      console.log(error);
+      return res.status(500).send({status:"500", msg: error});
+    }
+  })();
+});
+
+app.post("/api/hotel/add_new_room", (req, res)=>{
+  (async () =>{
+    try{
+      const hotelID = req.body.hotel_id;
+
+      const facilities_= {
+        airport_pickUp:         req.body.airport_pickUp,
+        car_rent:               req.body.car_rent,
+        coffy_maker:            req.body.coffy_maker,
+        conference_facilities:  req.body.conference_facilities,
+        cots:                   req.body.cots,
+        free_wifi:              req.body.free_wifi,
+        fridge:                 req.body.fridge,
+        in_room_safe:           req.body.in_room_safe,
+        laundry_service:        req.body.laundry_service,
+        pet_friendly:           req.body.pet_friendly,
+        room_service:           req.body.room_service,
+        spa:                    req.body.spa,
+        tv_in_room:             req.body.tv_in_room,
+      };
+
+      const room = {
+        Number_of_rooms:  req.body.Number_of_rooms,
+        beds_types:       req.body.beds_types,
+        capacity:         req.body.capacity,
+        description:      req.body.description,
+        discount:         req.body.discount,
+        facilities:       facilities_,
+        price:            req.body.price,
+      };
+
+      await firestore.collection('hotel').doc(hotelID).collection('room').add(room);
+      return res.status(200).send({status:"200", msg: "sucess"});
+    }catch(error){
+      console.log(error);
+      return res.status(500).send({status:"500", msg: error});
+    }
+  })();
+});
+
 
 
 //export the api to firebase cloud function
