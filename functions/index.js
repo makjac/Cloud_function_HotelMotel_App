@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 
 //get -> get()
 
-app.get("/api/holet/get_all_from_location/:location", (req, res) => {
+app.get("/api/hotel/get_all_from_location/:location", (req, res) => {
   (async () => {
     try{
       const hotelRef = firestore.collection("hotel");
@@ -229,7 +229,6 @@ app.post("/api/hotel/add_new_room", (req, res)=>{
     }
   })();
 });
-
 
 
 //export the api to firebase cloud function
